@@ -12,6 +12,8 @@ struct {
        }
 Alertdata[20];
 
+
+int switchPin = 2; //GPI04 D2
 bool Paused;
 unsigned long startMillis; 
 unsigned long previousMillis;
@@ -234,18 +236,6 @@ void onSubCallback(UserNotice data) {
   printf("Subscribers Name: %s\nTotal Months Subbed: %i\nSub Streak: %i\nSub Type: %i\nSub Plan Name: %s\nShare Sub Streak: %i\n",
     data.display_name, data.msg_param_cumulative_months, data.msg_param_streak_months, data.msg_param_sub_plan, data.msg_param_sub_plan_name, data.msg_param_should_share_streak);
   printf("\n---------------------------------------------------\n");
-
-// NEW SUBS********************************NOT CURRENTLY OUTPUTTING TO SERIAL****************************************
-
-
-          char message[] = {"Thank you for the subscription"};
-          strncat (message,data.display_name,80); // max chars is 80 with both added
-          twitch_api.send_chat_message(message);    
-          twitch_api.send_chat_message("/w drpuppetmaster !newsub");     
-          delay(Writesanity);
-          Next(&Nextwrite);
-          
-  
 }
 void onReSubCallback(UserNotice data) {
   printf("\n---------------------------------------------------\n");
@@ -299,6 +289,10 @@ void onRaidCallback(UserNotice data) {
   printf("Raider Display Name: %s\nRaider Channel Name: %s\nViewer Count: %i\n",
     data.msg_param_display_name, data.msg_param_login, data.msg_param_viewerCount);
   printf("\n---------------------------------------------------\n");
+
+      twitch_api.send_chat_message("/w drpuppetmaster !raid"); 
+
+  
 }
 void onUnRaidCallback(UserNotice data) {
   printf("\n---------------------------------------------------\n");
@@ -431,6 +425,21 @@ void setup() {
 }
 
 void loop() {
+
+/** figure this out later
+if (digitalRead(switchPin) == 1){
+    Paused = false;
+    Serial.println("NOT PAUSED DEFAULT"); 
+}
+else if (digitalRead(switchPin) == 0){
+  Paused = true;
+  Serial.println("PAUSED");
+}
+Serial.println(Paused);
+
+Serial.println(digitalRead(switchPin));
+*/
+
   
   if(twitch_api.available()) {
         twitch_api.poll();
@@ -454,11 +463,12 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 
 /////////////PERFORM BITS ACTION!!!!!
 
-
 //////!tswears 35
 
         if (Alertdata[Nextread].Aamount == 35){
-            twitch_api.send_chat_message("/w drpuppetmaster !tswears");    
+            char message[] = {"/w drpuppetmaster !tswears "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -466,7 +476,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!omrwhat 40
 
         if (Alertdata[Nextread].Aamount == 40){
-            twitch_api.send_chat_message("/w drpuppetmaster !omrwhat");    
+            char message[] = {"/w drpuppetmaster !omrwhat "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -474,7 +486,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!bthatshot 45
 
         if (Alertdata[Nextread].Aamount == 45){
-            twitch_api.send_chat_message("/w drpuppetmaster !bthatshot");    
+            char message[] = {"/w drpuppetmaster !bthatshot "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -482,7 +496,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!death 48
      
         if (Alertdata[Nextread].Aamount == 48){
-            twitch_api.send_chat_message("/w drpuppetmaster !death");    
+            char message[] = {"/w drpuppetmaster !death "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -491,7 +507,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!lilbitch 50
      
         if (Alertdata[Nextread].Aamount == 50){
-            twitch_api.send_chat_message("/w drpuppetmaster !lilbitch");    
+            char message[] = {"/w drpuppetmaster !lilbitch "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -499,7 +517,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!cblind 51
      
         if (Alertdata[Nextread].Aamount == 51){
-            twitch_api.send_chat_message("/w drpuppetmaster !cblind");    
+            char message[] = {"/w drpuppetmaster !cblind "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -508,7 +528,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!huge 69
      
         if (Alertdata[Nextread].Aamount == 69){
-            twitch_api.send_chat_message("/w drpuppetmaster !huge");    
+            char message[] = {"/w drpuppetmaster !huge "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -516,7 +538,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!tech 70
      
         if (Alertdata[Nextread].Aamount == 70){
-            twitch_api.send_chat_message("/w drpuppetmaster !tech");    
+            char message[] = {"/w drpuppetmaster !tech "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -524,7 +548,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!worked 73
      
         if (Alertdata[Nextread].Aamount == 73){
-            twitch_api.send_chat_message("/w drpuppetmaster !worked");    
+            char message[] = {"/w drpuppetmaster !worked "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -533,7 +559,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!subtle 75 TAUNTS - TIER 1
      
         if (Alertdata[Nextread].Aamount == 75){
-            twitch_api.send_chat_message("/w drpuppetmaster !subtle");    
+            char message[] = {"/w drpuppetmaster !subtle "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }        
@@ -541,7 +569,19 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!kevtool 80
      
         if (Alertdata[Nextread].Aamount == 80){
-            twitch_api.send_chat_message("/w drpuppetmaster !kevtool");    
+            char message[] = {"/w drpuppetmaster !kevtool "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
+            Next(&Nextread);
+            previousMillis = millis();
+        }
+
+//////!thelp 85
+     
+        if (Alertdata[Nextread].Aamount == 85){
+            char message[] = {"/w drpuppetmaster !thelp "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -550,7 +590,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!fukev 90
 
         if (Alertdata[Nextread].Aamount == 90){
-            twitch_api.send_chat_message("/w drpuppetmaster !fukev");    
+            char message[] = {"/w drpuppetmaster !fukev "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -558,7 +600,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!fart 100
      
         if (Alertdata[Nextread].Aamount == 100){
-            twitch_api.send_chat_message("/w drpuppetmaster !fart");    
+            char message[] = {"/w drpuppetmaster !fart "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -567,7 +611,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!mlyrics 120
 
         if (Alertdata[Nextread].Aamount == 120){
-            twitch_api.send_chat_message("/w drpuppetmaster !mlyrics");    
+            char message[] = {"/w drpuppetmaster !mlyrics "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -575,7 +621,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!bthot 125
 
         if (Alertdata[Nextread].Aamount == 125){
-            twitch_api.send_chat_message("/w drpuppetmaster !bthot");    
+            char message[] = {"/w drpuppetmaster !bthot "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -583,7 +631,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!bfinger 130
 
         if (Alertdata[Nextread].Aamount == 130){
-            twitch_api.send_chat_message("/w drpuppetmaster !bfinger");    
+            char message[] = {"/w drpuppetmaster !bfinger "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -591,7 +641,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!cknuckle 140
      
         if (Alertdata[Nextread].Aamount == 140){
-            twitch_api.send_chat_message("/w drpuppetmaster !cknuckle");    
+            char message[] = {"/w drpuppetmaster !cknuckle "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }   
@@ -599,7 +651,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!mean 150 TAUNTS - TIER 2
      
         if (Alertdata[Nextread].Aamount == 150){
-            twitch_api.send_chat_message("/w drpuppetmaster !mean");    
+            char message[] = {"/w drpuppetmaster !mean "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);          
             Next(&Nextread);
             previousMillis = millis();
         }    
@@ -607,7 +661,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!tsick 160
      
         if (Alertdata[Nextread].Aamount == 160){
-            twitch_api.send_chat_message("/w drpuppetmaster !tsick");    
+            char message[] = {"/w drpuppetmaster !tsick "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);          
             Next(&Nextread);
             previousMillis = millis();
         }  
@@ -615,7 +671,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!crage 170
      
         if (Alertdata[Nextread].Aamount == 170){
-            twitch_api.send_chat_message("/w drpuppetmaster !crage");    
+            char message[] = {"/w drpuppetmaster !crage "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }   
@@ -623,7 +681,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!mhangout 180
      
         if (Alertdata[Nextread].Aamount == 180){
-            twitch_api.send_chat_message("/w drpuppetmaster !mhangout");    
+            char message[] = {"/w drpuppetmaster !mhangout "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
             Next(&Nextread);
             previousMillis = millis();
         }   
@@ -631,7 +691,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!stopboobs 200
      
         if (Alertdata[Nextread].Aamount == 200){
-            twitch_api.send_chat_message("/w drpuppetmaster !stopboobs");    
+            char message[] = {"/w drpuppetmaster !stopboobs "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);          
             Next(&Nextread);
             previousMillis = millis();
         }   
@@ -639,7 +701,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!bcomplain 210
      
         if (Alertdata[Nextread].Aamount == 210){
-            twitch_api.send_chat_message("/w drpuppetmaster !bcomplain");    
+            char message[] = {"/w drpuppetmaster !bcomplain "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);   
             Next(&Nextread);
             previousMillis = millis();
         }   
@@ -647,14 +711,18 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!milkshakes 250
      
         if (Alertdata[Nextread].Aamount == 250){
-            twitch_api.send_chat_message("/w drpuppetmaster !milkshakes");    
+            char message[] = {"/w drpuppetmaster !milkshakes "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);  
             Next(&Nextread);
             previousMillis = millis();
         }           
 //////!tits 280
      
         if (Alertdata[Nextread].Aamount == 280){
-            twitch_api.send_chat_message("/w drpuppetmaster !tits");    
+            char message[] = {"/w drpuppetmaster !tits "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);    
             Next(&Nextread);
             previousMillis = millis();
         }     
@@ -663,7 +731,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!nasty 300 TAUNTS - TIER 3
      
         if (Alertdata[Nextread].Aamount == 300){
-            twitch_api.send_chat_message("/w drpuppetmaster !nasty");    
+            char message[] = {"/w drpuppetmaster !nasty "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);   
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -671,7 +741,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!csmellfinger 320
      
         if (Alertdata[Nextread].Aamount == 320){
-            twitch_api.send_chat_message("/w drpuppetmaster !csmellfinger");    
+            char message[] = {"/w drpuppetmaster !csmellfinger "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);   
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -679,7 +751,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 //////!bnudes 500
      
         if (Alertdata[Nextread].Aamount == 500){
-            twitch_api.send_chat_message("/w drpuppetmaster !bnudes");    
+            char message[] = {"/w drpuppetmaster !bnudes "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);   
             Next(&Nextread);
             previousMillis = millis();
         }
@@ -698,7 +772,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
     
     else if (strcmp(Alertdata[Nextread].Type,"Resub") == 0){
       
-      twitch_api.send_chat_message("/w drpuppetmaster !resub");    
+      char message[] = {"/w drpuppetmaster !resub "};
+      strncat (message,Alertdata[Nextread].Username,100);
+      twitch_api.send_chat_message(message);
       Next(&Nextread);
       previousMillis = millis();
     }
@@ -707,13 +783,17 @@ if ((unsigned long)(millis() - previousMillis) >= period){
     
     else if (strcmp(Alertdata[Nextread].Type,"Follow") == 0){
 
-      twitch_api.send_chat_message("/w drpuppetmaster !follow"); 
+      char message[] = {"/w drpuppetmaster !follow "};
+      strncat (message,Alertdata[Nextread].Username,100);
+      twitch_api.send_chat_message(message);
       Next(&Nextread);
       previousMillis = millis();
     }
 //////////////////RAID ACTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
       
-    
+ /* REMOVED, WE WANT THIS TO TRIGGER IMMEDIATELY   
+  *  
+  
     else if (strcmp(Alertdata[Nextread].Type,"Raid") == 0){
 
 
@@ -721,6 +801,8 @@ if ((unsigned long)(millis() - previousMillis) >= period){
       Next(&Nextread);
       previousMillis = millis();
     }
+
+   */
  /////////////////////REWARDID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
     
     
@@ -739,7 +821,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
     
     if (Alertdata[Nextread].Aamount >= 50){ 
       //large donations
-          twitch_api.send_chat_message("/w drpuppetmaster !ldono");     
+          char message[] = {"/w drpuppetmaster !ldono "};
+          strncat (message,Alertdata[Nextread].Username,100);
+          twitch_api.send_chat_message(message);
           Next(&Nextread);
           previousMillis = millis();
               
@@ -747,7 +831,9 @@ if ((unsigned long)(millis() - previousMillis) >= period){
           
     else {
       //standard donations
-      twitch_api.send_chat_message("/w drpuppetmaster !dono");    
+      char message[] = {"/w drpuppetmaster !dono "};
+      strncat (message,Alertdata[Nextread].Username,100);
+      twitch_api.send_chat_message(message);
       Next(&Nextread);
       previousMillis = millis();
   
