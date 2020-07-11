@@ -4,6 +4,8 @@
 #include <memory_constraints.h>
 
 //It will upload for ESP with Silver shielding however does not run or show errors IDKY
+//IF IT IS NOT WORKING, CHECK THE USERNAME / PASSWORD IS BEING SENT FROM BOT CREDS
+//You may see boot error(3,6 or 7 if this is the case)
 
 struct {
   char Type[10];
@@ -21,8 +23,6 @@ const unsigned long period = 30000;
 int Writesanity = 400;
 int Nextread;
 int Nextwrite;
-
-//It appears bot_credentials is not parsing the username/pass
 
 //Twitch Api Instance
 TwitchWebsocketIRC twitch_api;
@@ -358,9 +358,11 @@ void onModChatCallback(PrivMsg data) {
 
 
 void setup() {
-    // Connect to wifi
-    WiFi.begin(ssid, password);
 
+    // Connect to wifi
+   WiFi.begin(ssid, password);
+ 
+   
   // Check if connected to wifi
   while(WiFi.status() != WL_CONNECTED) {
     Serial.println("No Wifi");
@@ -597,6 +599,16 @@ if ((unsigned long)(millis() - previousMillis) >= period){
             previousMillis = millis();
         }
 
+//////!mynameis 95
+
+        if (Alertdata[Nextread].Aamount == 95){
+            char message[] = {"/w drpuppetmaster !mynameis "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
+            Next(&Nextread);
+            previousMillis = millis();
+        }        
+
 //////!fart 100
      
         if (Alertdata[Nextread].Aamount == 100){
@@ -607,6 +619,15 @@ if ((unsigned long)(millis() - previousMillis) >= period){
             previousMillis = millis();
         }
 
+//////!OMR 110
+     
+        if (Alertdata[Nextread].Aamount == 110){
+            char message[] = {"/w drpuppetmaster !OMR "};
+            strncat (message,Alertdata[Nextread].Username,100);
+            twitch_api.send_chat_message(message);
+            Next(&Nextread);
+            previousMillis = millis();
+        }
 
 //////!mlyrics 120
 
