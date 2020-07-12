@@ -23,11 +23,11 @@ Re-subscribers
 Prime Sibscribers
 Tiered Sub actions
 Raids
-Follows
 Does username parse successfully?
 
 *** Tested ***
 BITS
+Follows
 
 
 This is my current overlay menu, these can all be trigger with Bits and I use this code to firstly put data in an array, wait for time (30 seconds by default) to pass and perform action on the next item in the array.
