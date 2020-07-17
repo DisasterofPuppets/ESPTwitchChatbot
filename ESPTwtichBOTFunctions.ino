@@ -378,20 +378,28 @@ void onModChatCallback(PrivMsg data) {
 
 void setup() {
 
+    WiFi.mode(WIFI_STA);
+    Serial.begin(74880);     
     // Connect to wifi
    WiFi.begin(ssid, password);
  
    
-  // Check if connected to wifi
-  while(WiFi.status() != WL_CONNECTED) {
-    Serial.println("No Wifi");
-    delay(2000);
+  // Wait some time to see connect to wifi
+  for(int i = 0; i < 10 && WiFi.status() != WL_CONNECTED; i++) {
+    Serial.println(".");
+    delay(1000);
   }
 
-    Serial.begin(74880);
-    Serial.println("Connected to Wifi.");
-    startMillis = millis();  //initial start time
-    previousMillis = millis(); // initial data set for first loop
+    // Check if connected to wifi
+    if(WiFi.status() != WL_CONNECTED) {
+        Serial.println("No Wifi!");
+        return;
+    }
+  
+ Serial.println("Connected to Wifi, Connecting to server.");
+  
+ // try to connect to Websockets server
+ 
 
   //Connect to twitch via websockets
   twitch_api.connect_to_twitch_websocket();
@@ -443,6 +451,10 @@ void setup() {
     Sizes: IMG_SMALL, IMG_MEDIUM, IMG_LARGE
   */
   printf("Emote Image URL: %s\n", twitch_api.get_emote_image_url(301448586, TwitchWebsocketIRC::Emote_Image_Size::IMG_MEDIUM));
+
+   startMillis = millis();  //initial start time
+    previousMillis = millis(); // initial data set for first loop
+  
 }
 
 void loop() {
@@ -475,19 +487,8 @@ if (Paused){
 
 if (Nextread == Nextwrite){
   //printf("No more Alerts \n");
-
-///DON'T FORGET TO REMOVE THESE ONCE WORKING
-    Serial.print ("Type is ");
-    Serial.println (Alertdata[Nextread].Type);
-    Serial.print ("Username is ");
-    Serial.println (Alertdata[Nextread].Username) ;
-    Serial.print ("Amount is ");
-    Serial.println (Alertdata[Nextread].Aamount);
-    delay(1000);
-
-  
   delay(1000);
-}else{
+}/*else{
     Serial.print ("Type is ");
     Serial.println (Alertdata[Nextread].Type);
     Serial.print ("Username is ");
@@ -495,7 +496,7 @@ if (Nextread == Nextwrite){
     Serial.print ("Amount is ");
     Serial.println (Alertdata[Nextread].Aamount);
     delay(1000);
-  }
+  }*/
 if ((unsigned long)(millis() - previousMillis) >= period){
 //test whether the period has elapsed
         
