@@ -10,6 +10,7 @@
 struct {
   char Type[10];
   char Username[30];
+  char RwdID[40];
   unsigned int Aamount;
        }
 Alertdata[20];
@@ -361,6 +362,26 @@ void onCustomRewardCallback(PrivMsg data) {
   printf("\n=CUSTOM REWARD ID=\n");
   printf("Custom Reward Id: %s\n", data.custom_reward_id);
   printf("\n---------------------------------------------------\n");
+
+///////////////////////THESE REWARDS SKIP QUEUE//////////////////////////////////////////////////////////////////
+
+  if (strcmp(data.custom_reward_id, Zoom_ID) == 0) {
+    twitch_api.send_chat_message("/w drpuppetmaster !zoom");
+  }
+
+  
+///////////////////////////////////THESE REWARDS ARE QUEUED /////////////////////////////////////////////////////
+
+  if (strcmp(data.custom_reward_id, Door_ID) == 0) {
+        
+     strcpy(Alertdata[Nextwrite].Type,"Reward");
+     strcpy(Alertdata[Nextwrite].Username,data.display_name);
+     strcpy(Alertdata[Nextwrite].RwdID,data.custom_reward_id);
+     delay(Writesanity);
+     Next(&Nextwrite);
+  }
+
+  
 }
 void onHighlightedMsgCallback(PrivMsg data) {
   printf("\n---------------------------------------------------\n");
@@ -503,19 +524,19 @@ if ((unsigned long)(millis() - previousMillis) >= period){
 // determine the type
     if (strcmp(Alertdata[Nextread].Type,"Bits") == 0){
 
-/////////////PERFORM BITS ACTION!!!!!////////////////////////////////////////////
+///////////////////////////////////PERFORM BITS ACTION!!!!!//////////////////////////////////////////////
 
 Bits(Alertdata[Nextread].Username, Alertdata[Nextread].Aamount);
+Next(&Nextread);
+previousMillis = millis();
 
-/////////////SUB ACTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+///////////////////////////////////SUB ACTIONS//////////////////////////////////////////////////////////
     }
-    if (strcmp(Alertdata[Nextread].Type,"Sub") == 0){
+    else if (strcmp(Alertdata[Nextread].Type,"Sub") == 0){
 
       char message[] = {"/w drpuppetmaster !newsub "};
       strncat (message,Alertdata[Nextread].Username,100);  // add Alertdata[Nextread].Aamount (this is the Sub Tier)
       twitch_api.send_chat_message(message);
-
-      
       Next(&Nextread);
       previousMillis = millis();
 
@@ -523,7 +544,7 @@ Bits(Alertdata[Nextread].Username, Alertdata[Nextread].Aamount);
 /////////////RESUB ACTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       
     
-    if (strcmp(Alertdata[Nextread].Type,"Resub") == 0){
+    else if (strcmp(Alertdata[Nextread].Type,"Resub") == 0){
       
       char message[] = {"/w drpuppetmaster !resub "};
       strncat (message,Alertdata[Nextread].Username,100); // add Alertdata[Nextread].Aamount (this is the month streak)
@@ -534,7 +555,7 @@ Bits(Alertdata[Nextread].Username, Alertdata[Nextread].Aamount);
 /////////////////FOLLOW ACTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       
     
-    if (strcmp(Alertdata[Nextread].Type,"Follow") == 0){
+    else if (strcmp(Alertdata[Nextread].Type,"Follow") == 0){
 
       char message[] = {"/w drpuppetmaster !follow "};
       strncat (message,Alertdata[Nextread].Username,100);
@@ -561,8 +582,9 @@ Bits(Alertdata[Nextread].Username, Alertdata[Nextread].Aamount);
     
     else if (strcmp(Alertdata[Nextread].Type,"Reward") == 0){
 
-      Next(&Nextread);
-      previousMillis = millis();
+        Rewards(Alertdata[Nextread].Username,Alertdata[Nextread].RwdID);
+        Next(&Nextread);
+        previousMillis = millis();
     }
 /////////////////////DONATION ACTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
@@ -609,24 +631,34 @@ void Next(int *pNext)
   }
 }
 
+void Rewards(char* username, char* rewardID){
+
+// Doorprize choice///////////////////
+
+    if (strcmp(rewardID, Door_ID) == 0) {
+            char message[] = {"/w drpuppetmaster !door "};
+            strncat (message,username,100);
+            twitch_api.send_chat_message(message);
+
+    }
+
+}
 void Bits(char* username,int amount){
 
 //////***************REMOVE AFTER TESTING******************//////
 /*
-        if (Alertdata[Nextread].Aamount == 1){
+        if (amount == 1){
             char message[] = {"/w drpuppetmaster !omrwhat "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
-             if (Alertdata[Nextread].Aamount == 2){
+             else if (amount == 2){
             char message[] = {"/w drpuppetmaster !lilbitch "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }   
 
 /*
@@ -640,312 +672,281 @@ void Bits(char* username,int amount){
             char message[] = {"/w drpuppetmaster !tswears "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!omrwhat 40
 
-        else if(Alertdata[Nextread].Aamount == 40){
+        else if(amount == 40){
             char message[] = {"/w drpuppetmaster !omrwhat "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
         
 //////!bthatshot 45
 
-        else if (Alertdata[Nextread].Aamount == 45){
+        else if (amount == 45){
             char message[] = {"/w drpuppetmaster !bthatshot "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!death 48
      
-        else if (Alertdata[Nextread].Aamount == 48){
+        else if (amount == 48){
             char message[] = {"/w drpuppetmaster !death "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 
 //////!lilbitch 50
      
-        else if (Alertdata[Nextread].Aamount == 50){
+        else if (amount == 50){
             char message[] = {"/w drpuppetmaster !lilbitch "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!cblind 51
      
-        else if (Alertdata[Nextread].Aamount == 51){
+        else if (amount == 51){
             char message[] = {"/w drpuppetmaster !cblind "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 
 //////!huge 69
      
-        else if (Alertdata[Nextread].Aamount == 69){
+        else if (amount == 69){
             char message[] = {"/w drpuppetmaster !huge "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!tech 70
      
-        else if (Alertdata[Nextread].Aamount == 70){
+        else if (amount == 70){
             char message[] = {"/w drpuppetmaster !tech "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!worked 73
      
-        else if (Alertdata[Nextread].Aamount == 73){
+        else if (amount == 73){
             char message[] = {"/w drpuppetmaster !worked "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 
 //////!subtle 75 TAUNTS - TIER 1
      
-       else if (Alertdata[Nextread].Aamount == 75){
+       else if (amount == 75){
             char message[] = {"/w drpuppetmaster !subtle "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }        
 
 //////!kevtool 80
      
-       else if (Alertdata[Nextread].Aamount == 80){
+       else if (amount == 80){
             char message[] = {"/w drpuppetmaster !kevtool "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!thelp 85
      
-       else if (Alertdata[Nextread].Aamount == 85){
+       else if (amount == 85){
             char message[] = {"/w drpuppetmaster !thelp "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 
 //////!fukev 90
 
-       else if (Alertdata[Nextread].Aamount == 90){
+       else if (amount == 90){
             char message[] = {"/w drpuppetmaster !fukev "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!mynameis 95
 
-       else if (Alertdata[Nextread].Aamount == 95){
+       else if (amount == 95){
             char message[] = {"/w drpuppetmaster !mynameis "};
             strncat (message,Alertdata[Nextread].Username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }        
 
 //////!fart 100
      
-       else if (Alertdata[Nextread].Aamount == 100){
+       else if (amount == 100){
             char message[] = {"/w drpuppetmaster !fart "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!OMR 110
      
-       else if (Alertdata[Nextread].Aamount == 110){
+       else if (amount == 110){
             char message[] = {"/w drpuppetmaster !OMR "};
             strncat (message,Alertdata[Nextread].Username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!mlyrics 120
 
-       else if (Alertdata[Nextread].Aamount == 120){
+       else if (amount == 120){
             char message[] = {"/w drpuppetmaster !mlyrics "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!bthot 125
 
-       else if (Alertdata[Nextread].Aamount == 125){
+       else if (amount == 125){
             char message[] = {"/w drpuppetmaster !bthot "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!bfinger 130
 
-       else if (Alertdata[Nextread].Aamount == 130){
+       else if (amount == 130){
             char message[] = {"/w drpuppetmaster !bfinger "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!cknuckle 140
      
-       else if (Alertdata[Nextread].Aamount == 140){
+       else if (amount == 140){
             char message[] = {"/w drpuppetmaster !cknuckle "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }   
       
 //////!mean 150 TAUNTS - TIER 2
      
-       else if (Alertdata[Nextread].Aamount == 150){
+       else if (amount == 150){
             char message[] = {"/w drpuppetmaster !mean "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);          
-            Next(&Nextread);
-            previousMillis = millis();
+
         }    
 
 //////!tsick 160
      
-       else if (Alertdata[Nextread].Aamount == 160){
+       else if (amount == 160){
             char message[] = {"/w drpuppetmaster !tsick "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);          
-            Next(&Nextread);
-            previousMillis = millis();
+
         }  
 
 //////!crage 170
      
-       else if (Alertdata[Nextread].Aamount == 170){
+       else if (amount == 170){
             char message[] = {"/w drpuppetmaster !crage "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }   
 
 //////!mhangout 180
      
-       else if (Alertdata[Nextread].Aamount == 180){
+       else if (amount == 180){
             char message[] = {"/w drpuppetmaster !mhangout "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);
-            Next(&Nextread);
-            previousMillis = millis();
+
         }   
 
 //////!stopboobs 200
      
-       else if (Alertdata[Nextread].Aamount == 200){
+       else if (amount == 200){
             char message[] = {"/w drpuppetmaster !stopboobs "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);          
-            Next(&Nextread);
-            previousMillis = millis();
+
         }   
         
 //////!bcomplain 210
      
-       else if (Alertdata[Nextread].Aamount == 210){
+       else if (amount == 210){
             char message[] = {"/w drpuppetmaster !bcomplain "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);   
-            Next(&Nextread);
-            previousMillis = millis();
+
         }   
 
 //////!milkshakes 250
      
-       else if (Alertdata[Nextread].Aamount == 250){
+       else if (amount == 250){
             char message[] = {"/w drpuppetmaster !milkshakes "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);  
-            Next(&Nextread);
-            previousMillis = millis();
+
         }           
 //////!tits 280
      
-       else if (Alertdata[Nextread].Aamount == 280){
+       else if (amount == 280){
             char message[] = {"/w drpuppetmaster !tits "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);    
-            Next(&Nextread);
-            previousMillis = millis();
+
         }     
 
 
 //////!nasty 300 TAUNTS - TIER 3
      
-       else if (Alertdata[Nextread].Aamount == 300){
+       else if (amount == 300){
             char message[] = {"/w drpuppetmaster !nasty "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);   
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
         
 //////!csmellfinger 320
      
-       else if (Alertdata[Nextread].Aamount == 320){
+       else if (amount == 320){
             char message[] = {"/w drpuppetmaster !csmellfinger "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);   
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 //////!bnudes 500
      
-       else if (Alertdata[Nextread].Aamount == 500){
+       else if (amount == 500){
             char message[] = {"/w drpuppetmaster !bnudes "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);   
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 ///////!nobits Amount not on menu
@@ -954,8 +955,7 @@ void Bits(char* username,int amount){
             char message[] = {"/w drpuppetmaster !nobits "};
             strncat (message,username,100);
             twitch_api.send_chat_message(message);   
-            Next(&Nextread);
-            previousMillis = millis();
+
         }
 
 
