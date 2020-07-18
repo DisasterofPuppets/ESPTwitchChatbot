@@ -19,15 +19,14 @@ CLP (Castorr's Lazy Pack) (If you want to send text to a html overlay on the scr
 
 Still need to test the following 
 Subscribers
-Re-subscribers
-Prime Sibscribers
-Tiered Sub actions
-Raids
-Does username parse successfully?
+Re-subscribers (currently crashes)
+Prime Sibscribers (seems ok, will need to double check)
+Tiered Sub actions - Pending subs)
+Raids (nothing shows to screen)
 
 *** Tested ***
-BITS
-Follows
+Queued BITS
+Queued Follows
 Queued and instant Rewards
 
 
